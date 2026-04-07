@@ -72,7 +72,7 @@ def main():
         site_name=["linkedin", "indeed"],
         search_term=" OR ".join(POSITIONS),
         location=", ".join(LOCATIONS),
-        hours_old=1,
+        hours_old=24,
         results_wanted=50,
         country_indeed="India"
     )
@@ -109,7 +109,7 @@ def main():
 
         # Score against resume
         resume_score = score_job(description)
-        if resume_score < 20:  # minimum similarity threshold
+        if resume_score < 5:  # minimum similarity threshold
             continue
 
         # Send alert
