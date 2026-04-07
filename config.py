@@ -8,6 +8,12 @@ POSITIONS = [
     "Fullstack Engineer"
 ]
 
+TOP_COMPANIES = [
+    "google", "microsoft", "amazon", "meta",
+    "flipkart", "uber", "atlassian", "adobe",
+    "netflix", "airbnb"
+]
+
 SKILLS_REQUIRED = [
     "Python", "AWS", "NodeJS", "ReactJS",
     "PostgreSQL", "Javascript", "Typescript" 

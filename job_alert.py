@@ -8,23 +8,27 @@ TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 SEEN_FILE = "seen_jobs.json"
 
-# Load resume and vectorize
+# Load resume
 with open("resume.txt") as f:
     resume_text = f.read()
 
 def score_job(description):
-    """Cosine similarity between resume and job description."""
     if not description:
         return 0
     vec = TfidfVectorizer().fit_transform([resume_text, description])
     return round(cosine_similarity(vec[0], vec[1])[0][0] * 100, 1)
 
+def company_score(company):
+    company_lower = company.lower()
+    if any(c in company_lower for c in TOP_COMPANIES):
+        return 20   # strong boost
+    return 0
+
 def count_skill_matches(description):
     desc_lower = description.lower()
-    return sum(1 for s in SKILLS_REQUIRED if s.lower() in desc_lower)
+    return sum(1 for s in SKILLS_REQUIRED if s in desc_lower)
 
 def check_experience(description):
-    """Returns True if experience requirement is within our range."""
     import re
     matches = re.findall(r'(\d+)\+?\s*(?:to\s*(\d+))?\s*years?', description.lower())
     for match in matches:
@@ -32,19 +36,18 @@ def check_experience(description):
         high = int(match[1]) if match[1] else low
         if low <= EXPERIENCE_YEARS_MAX and high >= EXPERIENCE_YEARS_MIN:
             return True
-    return not matches  # if no mention of years, don't filter out
+    return True  # neutral if not mentioned
 
-def check_compensation(description):
-    """Returns True if salary is acceptable or not mentioned."""
+def extract_salary_score(description):
     import re
-    # Look for LPA mentions
     matches = re.findall(r'(\d+)\s*(?:–|-|to)\s*(\d+)\s*lpa', description.lower())
     if matches:
         for low, high in matches:
             if int(high) >= COMPENSATION_MIN_LPA:
-                return True
-        return False
-    return True  # no salary mentioned — don't filter out
+                return 10   # good salary
+            else:
+                return -10  # low salary
+    return 0  # neutral (no salary mentioned)
 
 def load_seen():
     try:
@@ -59,13 +62,16 @@ def save_seen(seen):
 
 def send_telegram(msg):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    requests.post(url, data={
+    res = requests.post(url, data={
         "chat_id": TELEGRAM_CHAT_ID,
         "text": msg,
         "parse_mode": "Markdown"
     })
+    print("Telegram:", res.status_code)
 
 def main():
+    print("Fetching jobs...")
+
     seen = load_seen()
 
     jobs = scrape_jobs(
@@ -77,60 +83,70 @@ def main():
         country_indeed="India"
     )
 
-    new_matches = 0
-
     print("Total jobs fetched:", len(jobs))
 
-    for i, (_, job) in enumerate(jobs.iterrows()):
-        if i>=5: 
-            break
+    candidates = []
+
+    for _, job in jobs.iterrows():
         title = str(job.get("title", ""))
         company = str(job.get("company", ""))
         url = str(job.get("job_url", ""))
         description = str(job.get("description", ""))
-        # salary = str(job.get("min_amount", "")) + "-" + str(job.get("max_amount", ""))
 
-        # # Deduplicate
-        # job_id = hashlib.md5(url.encode()).hexdigest()
-        # if job_id in seen:
-        #     continue
+        job_id = hashlib.md5(url.encode()).hexdigest()
+        if job_id in seen:
+            continue
 
-        # # Filter: company
-        # if COMPANIES and not any(c.lower() in company.lower() for c in COMPANIES):
-        #     continue
+        # --- Scoring ---
+        score = 0
 
-        # # Filter: skills
-        # if count_skill_matches(description) < SKILLS_MATCH_THRESHOLD:
-        #     continue
+        skills_matched = count_skill_matches(description)
+        score += skills_matched * 10
 
-        # # Filter: experience
-        # if not check_experience(description):
-        #     continue
+        resume_score = score_job(description)
+        score += resume_score
 
-        # # Filter: compensation
-        # if not check_compensation(description):
-        #     continue
+        if check_experience(description):
+            score += 10
 
-        # # Score against resume
-        # resume_score = score_job(description)
-        # if resume_score < 5:  # minimum similarity threshold
-        #     continue
+        salary_score = extract_salary_score(description)
+        score += salary_score
 
-        # Send alert
+        # ✅ Company boost
+        company_boost = company_score(company)
+        score += company_boost
+
+        print(f"{title} | Score: {score} | Skills: {skills_matched} | Resume: {resume_score}")
+
+        candidates.append((score, job, job_id, skills_matched, resume_score))
+
+    # Sort by best score
+    candidates.sort(key=lambda x: x[0], reverse=True)
+
+    sent = 0
+
+    for score, job, job_id, skills_matched, resume_score in candidates[:5]:
+        title = str(job.get("title", ""))
+        company = str(job.get("company", ""))
+        url = str(job.get("job_url", ""))
+
         msg = (
-            # f"*New job match!* ({resume_score}% resume match)\n\n"
+            f"*Top Job Match* 🚀\n\n"
             f"*Role:* {title}\n"
             f"*Company:* {company}\n"
-            f"*Skills matched:* {count_skill_matches(description)}/{len(SKILLS_REQUIRED)}\n"
-            # f"*Salary:* {salary if salary != 'None-None' else 'Not mentioned'}\n\n"
+            f"*Score:* {round(score,1)}\n"
+            f"*Skills matched:* {skills_matched}/{len(SKILLS_REQUIRED)}\n"
+            f"*Resume match:* {resume_score}%\n\n"
             f"{url}"
         )
+
         send_telegram(msg)
-        # seen.add(job_id)
-        new_matches += 1
+        seen.add(job_id)
+        sent += 1
 
     save_seen(seen)
-    print(f"Done. {new_matches} new matches sent.")
+
+    print(f"Done. {sent} jobs sent.")
 
 if __name__ == "__main__":
     main()
