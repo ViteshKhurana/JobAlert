@@ -15,17 +15,16 @@ TOP_COMPANIES = [
 ]
 
 SKILLS_REQUIRED = [
-    "Python", "AWS", "NodeJS", "ReactJS",
-    "PostgreSQL", "Javascript", "Typescript" 
+    "python", "aws",
+    "node", "nodejs", "node.js",
+    "react", "reactjs",
+    "postgres", "postgresql",
+    "javascript", "typescript"
 ]
 
-EXPERIENCE_YEARS_MIN = 3   # minimum years required in JD
-EXPERIENCE_YEARS_MAX = 6   # ignore if JD asks for 10+ years
+EXPERIENCE_YEARS_MIN = 3
+EXPERIENCE_YEARS_MAX = 6
 
-COMPENSATION_MIN_LPA = 3  # in LPA — skip jobs below this if salary mentioned
-
-COMPANIES = []
+COMPENSATION_MIN_LPA = 22  # only used if salary is mentioned
 
 LOCATIONS = ["Bangalore", "Remote", "Hybrid"]
-
-SKILLS_MATCH_THRESHOLD = 1   # at least N skills must match
