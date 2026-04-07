@@ -1,0 +1,56 @@
+Vitesh Khurana
+Software Development Engineer
+(+91) 8949178320
+vitesh.khurana@gmail.com
+linkedin.com/in/vitesh-khurana
+leetcode.com/vitesh18
+
+PROFILE SUMMARY
+Backend-focused Software Engineer with 4+ years of experience in building scalable, secure, and high-performance applications using NodeJs, HapiJs, and PostgreSQL. Skilled in API design, system architecture, and cloud deployments (AWS, Azure). Hands-on with frontend development (ReactJS) to deliver end-to-end solutions, DevOps automation with Ansible and Docker, and AI-powered integrations. Strong problem-solving, debugging, and leadership skills with proven success in delivering enterprise-grade solutions.
+
+SKILLS
+Backend & APIs: NodeJs, HapiJs, REST API Design, JWT, Redis, Sequelize ORM
+Database: PostgreSQL, MySQL, MongoDB
+Frontend: ReactJS, NextJs, Ant Design, HTML, CSS
+Cloud & DevOps: AWS (S3, EC2, SES), Azure, Docker, Ansible, Automation, Git
+Programming & AI/ML: JavaScript, Python, C++, DSA, Machine Learning, Deep Learning (ANN/CNN/NLP), Gemini LLM, OpenCV
+
+WORK EXPERIENCE
+
+Engineer-1, Software
+ideaForge Technologies Pvt Ltd., Bangalore, Karnataka
+Feb 2024 — Present
+- Led and mentored a backend team of 2 engineers and 5 interns, establishing backend best practices, code reviews, and architectural consistency.
+- Designed and owned backend architecture for a scalable, multi-tenant Project Development Lifecycle platform using Node.js (Hapi.js), PostgreSQL, Sequelize ORM, and AWS.
+- Architected and implemented a cloud-native backend system on AWS to automate sensor calibration workflows using FastAPI and AWS services.
+- Implemented JWT-based RBAC authentication and authorization.
+- Developed chatbot system powered by Gemini LLM.
+- Built a data import pipeline (Excel/CSV), improving onboarding time by up to 70%.
+- Designed modules: custom fields, SLA engine, transaction history, audit tracking, notification system (Redis, AWS SES).
+- Reduced system downtime by ~30% through debugging and optimization.
+- Represented team at AeroIndia 2025.
+
+Technical Stack: Hapi.js, ReactJs, PostgreSQL, Sequelize, Busboy, Redis, JWT, AWS, Git
+
+Software Engineer
+InMorphis Services Pvt Ltd., Mumbai, Maharashtra
+Nov 2023 — Feb 2024
+- Developed service catalog and integrated sub-tasks with Ansible workflows.
+
+Technical Stack: JavaScript, Ansible, ServiceNow Catalog
+
+Systems Engineer
+Infosys Ltd., Bangalore, Karnataka
+Sep 2021 — Nov 2023
+- Built Ansible scripts to manage cloud infrastructure and databases.
+- Automated workflows using Python, Azure APIs, and PowerShell.
+- Reduced VM provisioning time from 45 mins to 5 mins (Azure) and 2 days to 30 mins (on-prem).
+- Represented team at Tech@Blr event.
+
+Technical Stack: Python, Node.js, Bootstrap, PostgreSQL, Ansible, Microsoft Azure, VMware
+
+EDUCATION
+B.Tech - Computer Science & Engineering
+Rajasthan Technical University, Kota
+CGPA: 8.71 / 10
+2017 - 2021
