@@ -79,50 +79,54 @@ def main():
 
     new_matches = 0
 
-    for _, job in jobs.iterrows():
+    print("Total jobs fetched:", len(jobs))
+
+    for i, (_, job) in enumerate(jobs.iterrows()):
+        if i>=5: 
+            break
         title = str(job.get("title", ""))
         company = str(job.get("company", ""))
         url = str(job.get("job_url", ""))
         description = str(job.get("description", ""))
-        salary = str(job.get("min_amount", "")) + "-" + str(job.get("max_amount", ""))
+        # salary = str(job.get("min_amount", "")) + "-" + str(job.get("max_amount", ""))
 
-        # Deduplicate
-        job_id = hashlib.md5(url.encode()).hexdigest()
-        if job_id in seen:
-            continue
+        # # Deduplicate
+        # job_id = hashlib.md5(url.encode()).hexdigest()
+        # if job_id in seen:
+        #     continue
 
-        # Filter: company
-        if COMPANIES and not any(c.lower() in company.lower() for c in COMPANIES):
-            continue
+        # # Filter: company
+        # if COMPANIES and not any(c.lower() in company.lower() for c in COMPANIES):
+        #     continue
 
-        # Filter: skills
-        if count_skill_matches(description) < SKILLS_MATCH_THRESHOLD:
-            continue
+        # # Filter: skills
+        # if count_skill_matches(description) < SKILLS_MATCH_THRESHOLD:
+        #     continue
 
-        # Filter: experience
-        if not check_experience(description):
-            continue
+        # # Filter: experience
+        # if not check_experience(description):
+        #     continue
 
-        # Filter: compensation
-        if not check_compensation(description):
-            continue
+        # # Filter: compensation
+        # if not check_compensation(description):
+        #     continue
 
-        # Score against resume
-        resume_score = score_job(description)
-        if resume_score < 5:  # minimum similarity threshold
-            continue
+        # # Score against resume
+        # resume_score = score_job(description)
+        # if resume_score < 5:  # minimum similarity threshold
+        #     continue
 
         # Send alert
         msg = (
-            f"*New job match!* ({resume_score}% resume match)\n\n"
+            # f"*New job match!* ({resume_score}% resume match)\n\n"
             f"*Role:* {title}\n"
             f"*Company:* {company}\n"
             f"*Skills matched:* {count_skill_matches(description)}/{len(SKILLS_REQUIRED)}\n"
-            f"*Salary:* {salary if salary != 'None-None' else 'Not mentioned'}\n\n"
+            # f"*Salary:* {salary if salary != 'None-None' else 'Not mentioned'}\n\n"
             f"{url}"
         )
         send_telegram(msg)
-        seen.add(job_id)
+        # seen.add(job_id)
         new_matches += 1
 
     save_seen(seen)
