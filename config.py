@@ -28,3 +28,6 @@ EXPERIENCE_YEARS_MAX = 6
 COMPENSATION_MIN_LPA = 22  # only used if salary is mentioned
 
 LOCATIONS = ["Bangalore", "Remote", "Hybrid"]
+
+MIN_SKILL_MATCH = 1
+MIN_SCORE_THRESHOLD = 25
