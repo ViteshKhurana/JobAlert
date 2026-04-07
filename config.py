@@ -9,8 +9,8 @@ POSITIONS = [
 ]
 
 SKILLS_REQUIRED = [
-    "Python", "AWS", "FastAPI", "microservices",
-    "Kubernetes", "PostgreSQL"
+    "Python", "AWS", "NodeJS", "ReactJS",
+    "PostgreSQL", "Javascript", "Typescript" 
 ]
 
 EXPERIENCE_YEARS_MIN = 3   # minimum years required in JD
