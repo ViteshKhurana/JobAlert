@@ -2,7 +2,10 @@
 POSITIONS = [
     "Software Engineer",
     "Backend Engineer",
-    "Senior Software Engineer",
+    "Software Engineer 2",
+    "Software Engineer II",
+    "Full Stack Engineer",
+    "Fullstack Engineer"
 ]
 
 SKILLS_REQUIRED = [
@@ -11,9 +14,9 @@ SKILLS_REQUIRED = [
 ]
 
 EXPERIENCE_YEARS_MIN = 3   # minimum years required in JD
-EXPERIENCE_YEARS_MAX = 7   # ignore if JD asks for 10+ years
+EXPERIENCE_YEARS_MAX = 6   # ignore if JD asks for 10+ years
 
-COMPENSATION_MIN_LPA = 30  # in LPA — skip jobs below this if salary mentioned
+COMPENSATION_MIN_LPA = 25  # in LPA — skip jobs below this if salary mentioned
 
 COMPANIES = [
     "Google", "Meta", "Amazon", "Apple",
