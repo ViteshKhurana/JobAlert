@@ -103,6 +103,7 @@ def main():
         skills_matched = count_skill_matches(description)
         # ❗ HARD FILTER: skills must match
         if skills_matched < MIN_SKILL_MATCH:
+            print(f"❌ FILTERED (skills): {title} | Matched: {skills_matched}/{len(SKILLS_REQUIRED)} | Min required: {MIN_SKILL_MATCH}")
             continue
         score += skills_matched * 10
 
@@ -119,10 +120,11 @@ def main():
         company_boost = company_score(company)
         score += company_boost
 
-        print(f"{title} | Score: {score} | Skills: {skills_matched} | Resume: {resume_score}")
+        print(f"✅ PASSED: {title} | Score: {score} | Skills: {skills_matched} | Resume: {resume_score}")
 
         # ❗ SOFT FILTER: overall quality
         if score < MIN_SCORE_THRESHOLD:
+            print(f"❌ FILTERED (score): {title} | Score: {score} < {MIN_SCORE_THRESHOLD}")
             continue
 
         candidates.append((score, job, job_id, skills_matched, resume_score))
