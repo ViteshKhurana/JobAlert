@@ -3,6 +3,7 @@ from jobspy import scrape_jobs
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from config import *
+import time
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
@@ -11,6 +12,17 @@ SEEN_FILE = "seen_jobs.json"
 # Load resume
 with open("resume.txt") as f:
     resume_text = f.read()
+
+def fetch_description(url):
+    """Fetch full job description from URL"""
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        res = requests.get(url, headers=headers, timeout=5)
+        if res.status_code == 200:
+            return res.text[:5000]  # First 5000 chars
+    except:
+        pass
+    return ""
 
 def score_job(description):
     if not description:
@@ -96,6 +108,12 @@ def main():
         url = str(job.get("job_url", ""))
         description = str(job.get("description", ""))
 
+        # Fetch full description if missing
+        if not description or description == "None":
+            print(f"Fetching description for: {title}")
+            description = fetch_description(url)
+            time.sleep(0.5)  # Be respectful
+
         job_id = hashlib.md5(url.encode()).hexdigest()
         if job_id in seen:
             continue
@@ -104,11 +122,6 @@ def main():
         score = 0
 
         skills_matched = count_skill_matches(description)
-        
-        # DEBUG: Print first 3 jobs with full details
-        if i < 3:
-            print(f"\n🔍 DEBUG JOB {i+1}: {title}")
-            print(f"Description preview: {description[:200]}...")
         
         # ❗ HARD FILTER: skills must match
         if skills_matched < MIN_SKILL_MATCH:
