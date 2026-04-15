@@ -26,7 +26,8 @@ def company_score(company):
 
 def count_skill_matches(description):
     desc_lower = description.lower()
-    return sum(1 for s in SKILLS_REQUIRED if s in desc_lower)
+    matched = [s for s in SKILLS_REQUIRED if s in desc_lower]
+    return len(matched)
 
 def check_experience(description):
     import re
@@ -71,6 +72,8 @@ def send_telegram(msg):
 
 def main():
     print("Fetching jobs...")
+    print(f"Skills being searched: {SKILLS_REQUIRED}")
+    print(f"Min skills required: {MIN_SKILL_MATCH}")
 
     seen = load_seen()
 
@@ -87,7 +90,7 @@ def main():
 
     candidates = []
 
-    for _, job in jobs.iterrows():
+    for i, (_, job) in enumerate(jobs.iterrows()):
         title = str(job.get("title", ""))
         company = str(job.get("company", ""))
         url = str(job.get("job_url", ""))
@@ -101,6 +104,12 @@ def main():
         score = 0
 
         skills_matched = count_skill_matches(description)
+        
+        # DEBUG: Print first 3 jobs with full details
+        if i < 3:
+            print(f"\n🔍 DEBUG JOB {i+1}: {title}")
+            print(f"Description preview: {description[:200]}...")
+        
         # ❗ HARD FILTER: skills must match
         if skills_matched < MIN_SKILL_MATCH:
             print(f"❌ FILTERED (skills): {title} | Matched: {skills_matched}/{len(SKILLS_REQUIRED)} | Min required: {MIN_SKILL_MATCH}")

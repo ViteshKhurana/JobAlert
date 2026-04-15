@@ -5,7 +5,9 @@ POSITIONS = [
     "Software Engineer 2",
     "Software Engineer II",
     "Full Stack Engineer",
-    "Fullstack Engineer"
+    "Fullstack Engineer",
+    "Mern Stack Developer",
+    "Python Developer",
 ]
 
 TOP_COMPANIES = [
@@ -19,7 +21,10 @@ SKILLS_REQUIRED = [
     "node", "nodejs", "node.js",
     "react", "reactjs",
     "postgres", "postgresql",
-    "javascript", "typescript"
+    "javascript", "typescript",
+    "docker", "kubernetes", 
+    "microservices", "distributed systems",
+    "rest api", "git"
 ]
 
 EXPERIENCE_YEARS_MIN = 3
@@ -29,5 +34,5 @@ COMPENSATION_MIN_LPA = 22  # only used if salary is mentioned
 
 LOCATIONS = ["Bangalore", "Remote", "Hybrid"]
 
-MIN_SKILL_MATCH = 1
-MIN_SCORE_THRESHOLD = 25
+MIN_SKILL_MATCH = 2  # Lowered from 1 since jobs have many skills
+MIN_SCORE_THRESHOLD = 20  # Lowered from 25
