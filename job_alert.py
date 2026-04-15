@@ -43,6 +43,11 @@ def count_skill_matches(description):
 
 def check_experience(description):
     import re
+    
+    # Exclude internships
+    if any(word in description.lower() for word in ["internship", "intern", "fresher", "0-1 year", "0 to 1 year"]):
+        return False
+    
     matches = re.findall(r'(\d+)\+?\s*(?:to\s*(\d+))?\s*years?', description.lower())
     for match in matches:
         low = int(match[0])
@@ -82,6 +87,20 @@ def send_telegram(msg):
     })
     print("Telegram:", res.status_code)
 
+def is_valid_job(description, title):
+    """Filter out roles that don't match criteria"""
+    desc_lower = description.lower()
+    
+    # Exclude internships, contract roles
+    if any(word in desc_lower for word in ["internship", "intern", "fresher", "contract", "freelance", "gig"]):
+        return False
+    
+    # Exclude if duration too short
+    if any(word in desc_lower for word in ["6 months", "3 months", "2 months"]):
+        return False
+    
+    return True
+
 def main():
     print("Fetching jobs...")
     print(f"Skills being searched: {SKILLS_REQUIRED}")
@@ -113,6 +132,11 @@ def main():
             print(f"Fetching description for: {title}")
             description = fetch_description(url)
             time.sleep(0.5)  # Be respectful
+
+        # Early filter for internships/contract roles
+        if not is_valid_job(description, title):
+            print(f"❌ FILTERED (internship/contract): {title}")
+            continue
 
         job_id = hashlib.md5(url.encode()).hexdigest()
         if job_id in seen:
